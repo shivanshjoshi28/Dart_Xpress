@@ -1,0 +1,474 @@
+<!-- <html>
+    <head>
+    <title>Hello, World</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        html,
+        body,
+        #map {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            }
+    </style>
+    <script src="https://apis.mapmyindia.com/advancedmaps/api/a38512e118940b460f14c7e6c7592b19/map_sdk?layer=vector&v=2.0&callback=loadMap" defer async></script>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            var geoData={
+                "type": "FeatureCollection",
+                "features": [{
+                "type": "Feature",
+                "properties": {"htmlPopup":"noida"},
+                "geometry": {"type": "Point",
+                "coordinates": [28.544,77.5454]}
+                },{
+                "type": "Feature",
+                "properties": {"htmlPopup":"faridabad"},
+                "geometry": {"type": "Point",
+                "coordinates": [28.27189158,77.2158203125]}
+                },{
+                "type": "Feature",
+                "properties": {"htmlPopup":"delhi"},
+                "geometry": {"type": "Point",
+                "coordinates": [28.549511,77.2678250]}
+                }]
+            };
+            var map;
+            var marker;
+            function loadMap()
+            { 
+                map = new MapmyIndia.Map('map', {center: [28.544,77.5454]});
+                /*map.addListener('load', function () {
+                    var marker= new MapmyIndia.Marker({
+                    map: map,
+                    position: {"lat": 28.544,"lng":77.5454}
+                    });
+                }); */
+                map.addListener('load', function () {
+                    var window=new MapmyIndia.InfoWindow({
+                        map:map,
+                        content:"Balmukand",
+                        position:{lat: 28.529467 ,lng: 77.223150}
+                    });
+                });
+
+            } 
+        </script>
+    </body>
+</html> -->
+
+
+<!-- 
+
+<html>
+   <head>
+      <title>MapmyIndia Plugin - Search Plugin</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="desciption" content="Mapmyindia Search Plugin">
+      <script src="https://apis.mapmyindia.com/advancedmaps/v1/a38512e118940b460f14c7e6c7592b19/map_load?v=1.5"></script>
+      <script src="https://apis.mapmyindia.com/advancedmaps/api/ff8d541b-f4f5-48e9-988d-5d8f10f54b7f/map_sdk_plugins"></script>
+      <style>
+         body{margin: 0}
+         #map{
+         width: 100%; height: 100vh;margin:0;padding: 0;
+         }
+         .infoCls_map{margin-top: 60px !important;min-width: 300px}
+         #auto{color: #000;max-width: 99%;width:300px;position:absolute;z-index: 999;font-size: 15px;padding:10px;border: 1px solid #ddd;outline: none !important;top:5px;border-radius:10px;margin:4px;}
+      </style>
+   </head>
+   <body>
+      <div id="map"></div>
+      <input  type="text" id="auto" name="auto" class="search-outer form-control as-input" placeholder="Search places or eLoc's..." required="" spellcheck="false" >
+      <script>
+         /*Map Initialization*/
+          var map = new MapmyIndia.Map('map', {center: [28.09, 78.3], zoom: 5, search: false});
+          
+          /*Search plugin initialization*/
+            var optional_config={
+                location:[28.61, 77.23],
+               /* pod:'City',
+                bridge:true,
+                tokenizeAddress:true,*
+                filter:'cop:9QGXAM',
+                distance:true,
+                width:300,
+                height:300*/
+            };
+            new MapmyIndia.search(document.getElementById("auto"),optional_config,callback);
+            
+            /*CALL for fix text - LIKE THIS
+             * 
+             new MapmyIndia.search("agra",optional_config,callback);
+             * 
+             * */
+         
+            var marker;
+            function callback(data) { 
+                if(data)
+                {
+                    var dt=data[0];
+                    console.log(dt);
+                    if(!dt) return false;
+                    var eloc=dt.eLoc;
+                    var place=dt.placeName+", "+dt.placeAddress;
+                    /*Use elocMarker Plugin to add marker*/
+                    if(marker) marker.remove();
+                    marker=new MapmyIndia.elocMarker({map:map,eloc:eloc,popupHtml:place,popupOptions:{openPopup:true}}).fitbounds();
+                }
+              }    
+      </script>
+   </body>
+</html> -->
+
+
+<!-- 
+<html>
+   <head>
+      <title>MapmyIndia Plugin - Place Picker</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="desciption" content="Mapmyindia Place Picker Plugin">
+      <script src="https://apis.mapmyindia.com/advancedmaps/v1/a38512e118940b460f14c7e6c7592b19/map_load?v=1.3"></script>
+      <script src="https://apis.mapmyindia.com/advancedmaps/api/ff8d541b-f4f5-48e9-988d-5d8f10f54b7f/map_sdk_plugins"></script>
+      <style>
+         body{margin: 0}
+         #map{
+         width: 100%; height: 100vh;margin:0;padding: 0;
+         }
+      </style>
+   </head>
+   <body>
+      <div id="map"></div>
+      <script>
+         /*Map Initialization*/
+          var map = new MapmyIndia.Map('map', {center: [28.62, 77.09], zoom: 15, search: false});
+          
+          /*Place Picker plugin initialization*/
+           var options={
+                map:map,
+                callback:callback_method
+               /*
+                location:{lat:28.8787,lng:77.08888},//to open that location on map on initailization
+                closeBtn:true,
+                closeBtn_callback:closeBtn_callback,
+                search:true,
+                topText:'Location Search',
+                pinImage:'pin.png', //custom pin image
+                pinHeight:40
+                */
+            };
+            var picker= new MapmyIndia.placePicker(options);
+            function callback_method(data) {
+                console.log(data);alert(JSON.stringify(data));
+             }   
+             /*methods
+              * 
+              picker.remove();
+              picker.getLocation();
+              picker.setLocation({lat:28.8787,lng:77.787877});
+              * 
+              */
+      </script>
+   </body>
+</html> -->
+
+
+
+
+
+
+
+
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block head %}
+<script src="https://apis.mapmyindia.com/advancedmaps/v1/a38512e118940b460f14c7e6c7592b19/map_load?v=1.3"></script>
+<script src="https://apis.mapmyindia.com/advancedmaps/api/ff8d541b-f4f5-48e9-988d-5d8f10f54b7f/map_sdk_plugins"></script>
+
+
+<style>
+  #pills-tab a {
+    color: black;
+  }
+
+  #pills-tab a:hover {
+    color: orange;
+    text-decoration: none;
+  }
+
+  #pills-tab a.active {
+    color: orange;
+  }
+
+  #pickup-map,
+  #delivery-map {
+    height: 100%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- LEFT SIDE -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          JOB SUMMARY
+        </div>
+        <div class="card-body">
+          {% if not job %}
+          <p>A summary of your job information will appear here</p>
+          {% else %}
+
+          {% if step > 1 %}
+          <h4>{{ job.name }}</h4>
+          <span>{{ job.quantity }} Item</span><br />
+          <span>{{ job.get_size_display }} Job</span>
+          {% endif %}
+
+          {% if step > 2 %}
+          <hr />
+          <p class="text-secondary"><small><b>PICKUP</b></small></p>
+          <h4>{{ job.pickup_name }}</h4>
+          <span>{{ job.pickup_address }}</span><br />
+          {% endif %}
+
+          {% if step > 3 %}
+          <hr />
+          <p class="text-secondary"><small><b>DELIVERY</b></small></p>
+          <h4>{{ job.delivery_name }}</h4>
+          <span>{{ job.delivery_address }}</span><br />
+          {% endif %}
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="col-lg-8">
+
+      <!-- Step tabs -->
+      <div class="card mb-5">
+        <div class="card-body">
+
+          <ul class="nav nav-pills nav-justified align-items-center mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="{% if step == 1 %}active{% endif %}" id="pills-info-tab" data-toggle="pill" href="#pills-info"
+                role="tab" aria-controls="pills-info" aria-selected="true">Item Info</a>
+            </li>
+            <i class="fas fa-chevron-right"></i>
+            <li class="nav-item" role="presentation">
+              <a class="{% if step == 2 %}active{% endif %}" id="pills-pickup-tab" data-toggle="pill"
+                href="#pills-pickup" role="tab" aria-controls="pills-pickup" aria-selected="false">Pickup</a>
+            </li>
+            <i class="fas fa-chevron-right"></i>
+            <li class="nav-item" role="presentation">
+              <a class="{% if step == 3 %}active{% endif %}" id="pills-delivery-tab" data-toggle="pill"
+                href="#pills-delivery" role="tab" aria-controls="pills-delivery" aria-selected="false">Delivery</a>
+            </li>
+            <i class="fas fa-chevron-right"></i>
+            <li class="nav-item" role="presentation">
+              <a class="{% if step == 4 %}active{% endif %}" id="pills-payment-tab" data-toggle="pill"
+                href="#pills-payment" role="tab" aria-controls="pills-payment" aria-selected="false">Payment</a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+
+      <!-- Step forms -->
+      <b>CREATE A JOB</b>
+      <div class="tab-content" id="pills-tabContent">
+
+        <!-- Step 1 -->
+        <div class="tab-pane fade {% if step == 1 %}show active{% endif %}" id="pills-info" role="tabpanel"
+          aria-labelledby="pills-info-tab">
+          <h1>Item Info</h1>
+
+          <form method="POST" enctype="multipart/form-data">
+            <b class="text-secondary">Item Information</b><br />
+            <div class="card bg-white mt-2 mb-5">
+              <div class="card-body">
+                {% csrf_token %}
+                {% bootstrap_form step1_form %}
+              </div>
+            </div>
+            <input type="hidden" name="step" value="1">
+            <button type="submit" class="btn btn-warning">Save & Continue</button>
+          </form>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="tab-pane fade {% if step == 2 %}show active{% endif %}" id="pills-pickup" role="tabpanel"
+          aria-labelledby="pills-pickup-tab">
+          <h1>Pickup</h1>
+
+          <form method="POST" enctype="multipart/form-data">
+            <b class="text-secondary">Pickup Information</b><br />
+            <div class="card bg-white mt-2 mb-5">
+              <div class="card-body">
+
+                <div class="row">
+                  <div class="col-lg-8">
+                    {% csrf_token %}
+                    {% bootstrap_form step2_form exclude='pickup_lat, pickup_lng' %}
+                    <input hidden id="pickup_lat" name="pickup_lat" value="{{ job.pickup_lat }}" />
+                    <input hidden id="pickup_lng" name="pickup_lng" value="{{ job.pickup_lng }}">
+                  </div>
+                  <div class="col-lg-4">
+                    <div id="pickup-map"></div>
+                    <div id="pickup-infowindow-content">
+                      <img src="" width="16" height="16" id="pickup-place-icon" />
+                      <span id="pickup-place-name" class="title"></span><br />
+                      <span id="pickup-place-address"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="step" value="2">
+            <button type="button" class="btn btn-outline-warning"
+              onclick="$('#pills-info-tab').tab('show');">Back</button>
+            <button type="submit" class="btn btn-warning">Save & Continue</button>
+          </form>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="tab-pane fade {% if step == 3 %}show active{% endif %}" id="pills-delivery" role="tabpanel"
+          aria-labelledby="pills-delivery-tab">
+          <h1>Delivery</h1>
+
+          <form method="POST" enctype="multipart/form-data">
+            <b class="text-secondary">Delivery Information</b><br />
+            <div class="card bg-white mt-2 mb-5">
+              <div class="card-body">
+
+                <div class="row">
+                  <div class="col-lg-8">
+                    {% csrf_token %}
+                    {% bootstrap_form step3_form exclude='delivery_lat, delivery_lng' %}
+                    <input hidden id="delivery_lat" name="delivery_lat" value="{{ job.delivery_lat }}" />
+                    <input hidden id="delivery_lng" name="delivery_lng" value="{{ job.delivery_lng }}">
+                  </div>
+                  <div class="col-lg-4">
+                    <div id="delivery-map"></div>
+                    <div id="delivery-infowindow-content">
+                      <img src="" width="16" height="16" id="delivery-place-icon" />
+                      <span id="delivery-place-name" class="title"></span><br />
+                      <span id="delivery-place-address"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="step" value="3">
+            <button type="button" class="btn btn-outline-warning"
+              onclick="$('#pills-info-tab').tab('show');">Back</button>
+            <button type="submit" class="btn btn-warning">Save & Continue</button>
+          </form>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="tab-pane fade {% if step == 4 %}show active{% endif %}" id="pills-payment" role="tabpanel"
+          aria-labelledby="pills-payment-tab">
+          <h1>Payment</h1>
+
+          <form method="POST">
+            <b class="text-secondary">Payment Method</b>
+            <div class="card bg-white mt-2 mb-5">
+              <div class="card-body">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label>Your Credit/Debit Card</label>
+                  <input class="form-control" value="**** **** **** {{ request.user.customer.stripe_card_last4 }}"
+                    disabled>
+                </div>
+                <div class="form-group">
+                  <label>Price</label>
+                  <input class="form-control" value="${{ job.price }}" disabled>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="step" value="4">
+            <button type="button" class="btn btn-outline-warning"
+              onclick="$('#pills-delivery-tab').tab('show');">Back</button>
+            <button type="submit" class="btn btn-warning">Create Job</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+    var pickupLat = parseFloat('{{ job.pickup_lat }}');
+    var pickupLng = parseFloat('{{ job.pickup_lng }}');
+  
+    var deliveryLat = parseFloat('{{ job.delivery_lat }}');
+    var deliveryLng = parseFloat('{{ job.delivery_lng }}');
+    console.log(pickupLat);
+    console.log(pickupLng);
+    console.log(deliveryLat);
+    console.log(deliveryLng);
+    function StartMapByType(type, initLat, initLng) {
+        /*Map Initialization*/
+        var map = new MapmyIndia.Map(type+"-map", {center: [28.09, 78.3], zoom: 5, search: false});
+        
+        /*Search plugin initialization*/
+        var optional_config={
+            location:[28.61, 77.23],
+            /* pod:'City',
+            bridge:true,
+            tokenizeAddress:true,*
+            filter:'cop:9QGXAM',
+            distance:true,
+            width:300,
+            height:300*/
+        };
+        new MapmyIndia.search(document.getElementById("id_"+type+"_address"),optional_config,callback);
+        
+        /*CALL for fix text - LIKE THIS
+            * 
+            new MapmyIndia.search("agra",optional_config,callback);
+            * 
+            * */
+        
+        var marker;
+        function callback(data) { 
+            console.log("hello",type)
+            console.log(data)
+            if(data)
+            {
+                var dt=data[0];
+                if(!dt) return false;
+                var eloc=dt.eLoc;
+                var place=dt.placeName+", "+dt.placeAddress;
+                console.log(dt);
+                $("#" + type + "_lat").val(dt.lat);
+                $("#" + type + "_lng").val(dt.lng);
+                /*Use elocMarker Plugin to add marker*/
+                if(marker) marker.remove();
+                marker=new MapmyIndia.elocMarker({map:map,eloc:eloc,popupHtml:place,popupOptions:{openPopup:true}}).fitbounds();
+            }
+        }    
+    }
+
+    function initMap() {
+        StartMapByType("pickup", pickupLat, pickupLng);
+        StartMapByType("delivery", deliveryLat, deliveryLng);
+        console.log("tes");
+    }
+    initMap();
+
+ </script>
+
+{% endblock %}
