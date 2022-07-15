@@ -81,3 +81,28 @@ Finally the product is delivered safely and job is completed. The admin can send
   Courier Side Preview
 </p>
 
+
+
+
+## Usage:
+1->Firstly, create a Firebase account, stripe account and Paypal developer account
+Then fill the required variable in setting.py
+
+    STRIPE_API_PUBLIC_KEY = ""
+    STRIPE_API_SECRET_KEY = ""
+    GOOGLE_MAP_API_KEY = ""
+    PAYPAL_MODE = "sandbox"
+    PAYPAL_CLIENT_ID = "YOUR_PAYPAL_CLIENT_ID"
+    PAYPAL_CLIENT_SECRET = "YOUR_PAYPAL_CLIENT_SECRET"
+    
+2-> Go the location below and fill this with your firebase detail(this will be used in sending SMS through Firebase API) : 
+
+     Dart_Xpress\core\templates\firebase-messaging-sw.js
+     
+3-> Ensure that Redis server is running in the background.
+
+4->Then use the command below after coming to this directory
+
+     *  pip install -r requirements.txt
+     *  python manage.py runserver
+            
