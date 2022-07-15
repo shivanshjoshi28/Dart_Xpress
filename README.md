@@ -68,9 +68,8 @@ Finally the product is delivered safely and job is completed. The admin can send
   </br>
   Customer Side Preview
 </p>
-
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/58811384/163834041-8abe30af-9f16-4cd1-a5b5-ab881533a501.png">
+  <img src="https://user-images.githubusercontent.com/58811384/179199435-6a3a54c3-d238-4c21-9841-aa580158deb7.png">
   </br>
   Customer Side Real Time tracking
 </p>
